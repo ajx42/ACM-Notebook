@@ -1,0 +1,87 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define f first
+#define s second
+#define pb push_back
+#define pp push
+#define mp make_pair
+
+typedef long long int lld;
+typedef long double ldb;
+typedef unsigned long long int ull;
+
+#define MAX 1000000
+#define INF 1000000000
+
+class node {
+	public:
+	int at;
+	int cost;
+	node(int i, int j){
+		at = i;
+		cost = j;
+	}
+	
+};
+
+bool operator <(const node &leftNode, const node &rightNode){
+	if(leftNode.cost != rightNode.cost) return leftNode.cost > rightNode.cost;
+	if(leftNode.at != rightNode.at) return leftNode.at > rightNode.at;
+	return false;
+}
+
+
+vector <node> adj[MAX];
+int dis[MAX];
+bool vis[MAX];
+
+void Dijkstra(int source, int n){
+	priority_queue <node> dij;
+	for(int i=0; i<=n; i++) {
+		dis[i] = INF;
+		vis[i] = 0;
+	}
+	
+	dij.pp(node(source,0));
+	dis[source] = 0;
+	
+	while(!dij.empty()){
+		node pi = dij.top();
+		dij.pop();
+		if(vis[pi.at]) continue;
+		vis[pi.at]=1;
+		for(int i=0; i<adj[pi.at].size(); i++){
+			if(!vis[adj[pi.at][i].at] && (adj[pi.at][i].cost + pi.cost < dis[adj[pi.at][i].at])){
+				dij.pp(node(adj[pi.at][i].at, dis[adj[pi.at][i].at]=adj[pi.at][i].cost + pi.cost));
+			}
+		}
+	}	
+}
+
+main(){
+	freopen("input.txt", "rt", stdin);
+	freopen("out.txt", "wt", stdout);
+	int t;
+	cin >> t;
+	while(t--){
+		int n, m, x, y, w;
+		cin >> n >> m;
+		
+		for(int i=0; i<=n;i++) adj[i].clear();
+		for(int i=0; i<m; i++){
+			cin >> x >> y >> w;
+			adj[x].pb(node(y,w));
+			adj[y].pb(node(x,w));
+		}
+		int source;
+		cin >> source;
+		Dijkstra(source, n);
+		for(int i=1; i<=n; i++){
+			if(i==source) continue;
+			if(dis[i]==INF) cout << "-1 ";
+			else cout << dis[i] <<" ";
+		}
+		cout << endl;
+	}
+}
