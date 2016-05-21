@@ -62,26 +62,5 @@ void Dijkstra(int source, int n){
 main(){
 	freopen("input.txt", "rt", stdin);
 	freopen("out.txt", "wt", stdout);
-	int t;
-	cin >> t;
-	while(t--){
-		int n, m, x, y, w;
-		cin >> n >> m;
-		
-		for(int i=0; i<=n;i++) adj[i].clear();
-		for(int i=0; i<m; i++){
-			cin >> x >> y >> w;
-			adj[x].pb(node(y,w));
-			adj[y].pb(node(x,w));
-		}
-		int source;
-		cin >> source;
-		Dijkstra(source, n);
-		for(int i=1; i<=n; i++){
-			if(i==source) continue;
-			if(dis[i]==INF) cout << "-1 ";
-			else cout << dis[i] <<" ";
-		}
-		cout << endl;
-	}
+	// driver
 }
