@@ -1,4 +1,3 @@
-
 // in the name of god
 #include <bits/stdc++.h>
 using namespace std;
@@ -88,19 +87,11 @@ main(){
     for(int i=2; i<=n; i++){
         if(col[i]==0){
             for(int t=1;t<=k; t++){
-                buff = 0;
-                vll vct;
-                for(int j=1; j<=m; j++){
-                    vct.pb({dp[i-1][j][t],j});
-                }
-                sort(all(vct));
                 for(int j=1; j<=m; j++){
                     dp[i][j][t] = min(dp[i][j][t], dp[i-1][j][t]+p[i][j]);
-                    if(vct[0].s==j){
-                        dp[i][j][t+1] = min(dp[i][j][t+1],vct[1].f + p[i][j]);
-                    }
-                    else{
-                        dp[i][j][t+1] = min(dp[i][j][t+1], vct[0].f + p[i][j]);
+                    for(int u=1; u<=m; u++){
+                        if(j==u) continue;
+                        dp[i][j][t+1] = min(dp[i][j][t+1], dp[i-1][u][t]+p[i][j]);
                     }
                 }
             }
@@ -111,7 +102,7 @@ main(){
                     if(dp[i-1][j][t] == INF) continue;
 
                     if(j==col[i]){
-                        dp[i][j][t] = dp[i-1][j][t];
+                        dp[i][j][t] = min(dp[i][j][t],dp[i-1][j][t]);
                     }
                     else{
                         dp[i][col[i]][t+1] = min(dp[i][col[i]][t+1],dp[i-1][j][t]);
@@ -128,5 +119,3 @@ main(){
     if(ans==INF) return cout << "-1",0;
     cout << ans << endl;
 }
-
-
