@@ -1,0 +1,56 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long int lld;
+typedef long double ldb;
+
+#define f first
+#define s second
+#define pb push_back
+#define mp make_pair
+
+struct SuffixArray{
+	int L;
+	string s;
+	vector <vector <int> > p;
+	vector < pair < pair <int, int> , int > > M;
+	
+	SuffixArray(string str) : L(str.length()), s(str), p(1, vector <int> (L,0)), M(L){
+		for(int i = 0; i < L; i++){
+			p[0][i] = (int)s[i];
+		}
+		for(int skip = 1, level = 1; skip < L; skip <<= 1, level++){
+			p.pb(vector <int> (L,0));
+			for(int i = 0; i < L; i++){
+				M[i] = {{p[level-1][i], i+skip < L ? p[level-1][i+skip] : -1},i};
+			}
+			sort(M.begin(), M.end());
+			for(int i = 0; i < L; i++){
+				p[level][M[i].s] = (i>0 and M[i].f==M[i-1].f ? p[level][M[i-1].s] : i);
+			}
+		}
+	}
+	int lcp(int i, int j){
+		int len = 0;
+		if(i == j) return L - i;
+		for(int k = p.size() - 1; k >= 0 and i < L and j < L; k--){
+			if(p[k][i] == p[k][j]){
+				i+= 1<<k;
+				j+= 1<<k;
+				len+= 1<<k;
+			}
+		}
+		return len;
+	}
+	vector <int> getsa(){
+		return p.back();
+		// returns index of each suffix in sorted array, take inverse to get actual SuffArray
+	}
+};
+
+main(){
+	SuffixArray suf("bobocel");
+	vector <int> v = suf.getsa();
+	for(auto i: v) cout << i << ' '; cout << endl;
+	cout << suf.lcp(0,2) << endl;
+}
