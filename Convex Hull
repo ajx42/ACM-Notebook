@@ -1,0 +1,87 @@
+/*
+	*--> 4d!ty@ <--*
+*/
+// 4d!ty@
+// 2D convex hull using monotone-chain (Grahm Scan) Algorithm
+// O(n log n)
+//
+// INPUT: vector of points (unordered)
+// OUTPUT: 	a vector of points of convex hull, counterclockwise, 
+// 			starting with bottommost/leftmost point
+// 
+// *note: capable of seperately calculating upper and lower parts
+//
+// Reference: Stanford ACM Team Notebook:
+// https://github.com/jaehyunp/stanfordacm/blob/master/code/ConvexHull.cc
+
+#define ONLINE_JUDGE 1
+#define DBG 1
+
+#define f first
+#define s second
+#define pb push_back
+#define mp make_pair
+#define pp push
+
+typedef long long int lld;
+typedef long double ldb;
+
+#define fru(i,start,lim) for(i=start; i<lim; i++)
+#define frd(i,start,lim) for(i=start; i>=lim; i--)
+
+#define pii pair<int,int>
+#define pll pair<lld,lld>
+#define vi vector<int>
+#define vl vector<lld>
+
+#define scan(x) scanf("%d", &x)
+#define print(x) printf("%d", (x))
+#define scan64(x) scanf("%I64d", &x)
+#define print64(x) printf("%I64d", (x))
+#define scanlld(x) scanf("%lld", &x)
+#define printlld(x) printf("%lld", (x))
+
+#define fre freopen("input.txt","rt",stdin); freopen("out.txt","wt",stdout)
+#define dbg(x) if(DBG)cerr << #x << " = " << x << endl
+
+#include <bits/stdc++.h>
+using namespace std;
+
+// start cut
+
+struct PT {
+	ldb x, y;
+	PT() {}
+	PT(ldb i, ldb j){x=i,y=j;}
+	
+	bool operator<(const PT &rhs) const { return mp(y,x) < mp(rhs.y,rhs.x); }
+  	bool operator==(const PT &rhs) const { return mp(y,x) == mp(rhs.y,rhs.x); }
+};
+
+ldb cross(PT p, PT q){
+	return p.x*q.y-p.y*q.x;
+}
+
+ldb area2(PT a, PT b, PT c){
+	return cross(a,b) + cross(b,c) + cross(c,a);
+}
+
+vector <PT> Hull(vector <PT> pts){
+	sort(pts.begin(),pts.end());
+	vector <PT> up, dn, H;
+	int sz = pts.size();
+	for(int i=0; i<sz; i++){
+		while(up.size() > 1 && area2(up[up.size()-2],up.back(),pts[i])>=0) up.pop_back();
+		while(dn.size() > 1 && area2(dn[dn.size()-2],dn.back(),pts[i])<=0) dn.pop_back();
+		up.pb(pts[i]);
+		dn.pb(pts[i]);
+	}
+	H = dn;
+	sz = up.size();
+	for(int i = sz - 2; i>=1; i--) H.pb(up[i]);
+	return H;
+}
+
+main(){
+	// driver
+}
