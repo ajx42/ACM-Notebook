@@ -1,0 +1,58 @@
+// merge sort 
+// and count inversions
+#include <bits/stdc++.h>
+using namespace std;
+
+int a[100010];
+int tmp[100010];
+int invr = 0;
+
+void srt(int lo, int hi){
+	int md;
+	if(lo>=hi){
+		return;
+	}
+	else{
+		md = (lo+hi)/2;
+		srt(lo,md);
+		srt(md+1,hi);
+	}
+
+	int ind=lo, c1=lo, c2=md+1;
+
+	while(1){
+		if(c1==md+1 and c2==hi+1) break;
+		if(c1==md+1){
+			while(c2<=hi){
+				tmp[ind++] = a[c2++];
+			}
+		}
+		else if(c2==hi+1){
+			while(c1<=md){
+				tmp[ind++] = a[c1++];
+			}	
+		}
+		else if(a[c1]>a[c2]){
+			invr+=(md-c1+1);
+			tmp[ind++] = a[c2++]; 
+		}
+		else{
+			tmp[ind++] = a[c1++];
+		}
+	}
+	for(int i = lo; i <= hi; i++) a[i] = tmp[i];
+}
+
+
+main(){
+	int n; cin >> n;
+	for(int i = 0; i < n; i++){
+		cin >> a[i];
+	}
+	srt(0,n-1);
+	for(int i = 0; i < n; i++){
+		cout << a[i] << ' ';
+	}
+	cout << endl;
+	cout << "number of inversions: " << invr << endl;
+}
